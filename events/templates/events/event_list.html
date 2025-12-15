@@ -1,0 +1,59 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Афиша мероприятий{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">🎭 Афиша городских мероприятий</h1>
+
+<!-- Поиск -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <input type="text" 
+               id="searchInput" 
+               class="form-control" 
+               placeholder="Поиск по названию или месту..."
+               onkeyup="filterEvents()">
+    </div>
+</div>
+
+{% for event in events %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ event.title }}</h5>
+        <p class="card-text">
+            📅 <strong>Дата:</strong> {{ event.date|date:"d.m.Y" }}
+            {% if event.time %}⏰ {{ event.time|time:"H:i" }}{% endif %}<br>
+            📍 <strong>Место:</strong> {{ event.location }}
+        </p>
+        <p class="card-text">{{ event.short_description }}</p>
+        <a href="{% url 'event_detail' event.id %}" class="btn btn-primary">
+            Подробнее
+        </a>
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-info">
+    На данный момент нет запланированных мероприятий.
+</div>
+{% endfor %}
+
+<script>
+function filterEvents() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const location = card.querySelector('.card-text').textContent.toLowerCase();
+        
+        if (title.includes(filter) || location.includes(filter)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+
+{% endblock %}

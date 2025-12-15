@@ -1,0 +1,36 @@
+{% extends 'events/base.html' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'event_list' %}" class="btn btn-secondary mb-4">← Назад к афише</a>
+
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">{{ event.title }}</h1>
+        
+        <div class="mb-4">
+            <p>📅 <strong>Дата:</strong> {{ event.date|date:"d.m.Y" }}</p>
+            {% if event.time %}
+            <p>⏰ <strong>Время:</strong> {{ event.time|time:"H:i" }}</p>
+            {% endif %}
+            <p>📍 <strong>Место:</strong> {{ event.location }}</p>
+        </div>
+        
+        <hr>
+        
+        <h4>Описание мероприятия</h4>
+        <p style="white-space: pre-line;">{{ event.description }}</p>
+        
+        {% if event.image_url %}
+        <div class="mt-4">
+            <img src="{{ event.image_url }}" class="img-fluid" alt="{{ event.title }}">
+        </div>
+        {% endif %}
+        
+        <div class="mt-4 text-muted">
+            <small>Добавлено: {{ event.created_at|date:"d.m.Y H:i" }}</small>
+        </div>
+    </div>
+</div>
+{% endblock %}
