@@ -22,5 +22,4 @@ urlpatterns = [
     path('admin/events/<int:event_id>/delete/', views.admin_event_delete, name='admin_event_delete'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
