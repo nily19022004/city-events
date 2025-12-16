@@ -2,33 +2,219 @@
 
 {% block title %}{{ event.title }}{% endblock %}
 
-{% block content %}
-<a href="{% url 'event_list' %}" class="btn btn-secondary mb-4">← Назад к афише</a>
+{% block extra_css %}
+<style>
+    .detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .back-link {
+        color: var(--text-light);
+        text-decoration: none;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 30px;
+        transition: color 0.3s;
+    }
+    
+    .back-link:hover {
+        color: var(--primary-blue);
+    }
+    
+    .detail-card {
+        background-color: var(--white);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .detail-header {
+        padding: 30px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .detail-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 20px;
+    }
+    
+    .detail-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: 15px;
+    }
+    
+    .detail-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-dark);
+    }
+    
+    .detail-meta-icon {
+        color: var(--primary-green);
+        font-size: 18px;
+    }
+    
+    .detail-body {
+        padding: 30px;
+    }
+    
+    .detail-description-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 16px;
+    }
+    
+    .detail-description {
+        color: var(--text-dark);
+        font-size: 16px;
+        line-height: 1.8;
+        white-space: pre-line;
+        margin-bottom: 30px;
+    }
+    
+    .detail-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .detail-footer {
+        padding: 20px 30px;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-light);
+        font-size: 14px;
+    }
+    
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+        .detail-container {
+            padding: 0 15px;
+        }
+        
+        .back-link {
+            font-size: 14px;
+            padding: 8px 0;
+            margin-bottom: 20px;
+            min-height: 44px; /* Минимальная высота для удобного нажатия */
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .detail-card {
+            border-radius: 8px;
+        }
+        
+        .detail-header {
+            padding: 20px;
+        }
+        
+        .detail-title {
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+        
+        .detail-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+        }
+        
+        .detail-body {
+            padding: 20px;
+        }
+        
+        .detail-description-title {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .detail-description {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .detail-image {
+            max-height: 300px;
+            margin-bottom: 16px;
+        }
+        
+        .detail-footer {
+            padding: 16px 20px;
+            font-size: 13px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .detail-title {
+            font-size: 20px;
+        }
+        
+        .detail-meta {
+            font-size: 13px;
+        }
+        
+        .detail-description-title {
+            font-size: 16px;
+        }
+        
+        .detail-description {
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}
 
-<div class="card">
-    <div class="card-body">
-        <h1 class="card-title">{{ event.title }}</h1>
+{% block content %}
+<div class="detail-container">
+    <a href="{% url 'event_list' %}" class="back-link">
+        <i class="bi bi-arrow-left"></i>
+        Назад к афише
+    </a>
+    
+    <div class="detail-card">
+        <div class="detail-header">
+            <h1 class="detail-title">{{ event.title }}</h1>
+            <div class="detail-meta">
+                <span class="detail-meta-item">
+                    <i class="bi bi-calendar3 detail-meta-icon"></i>
+                    <strong>Дата:</strong> {{ event.date|date:"d.m.Y" }}
+                </span>
+                {% if event.time %}
+                <span class="detail-meta-item">
+                    <i class="bi bi-clock detail-meta-icon"></i>
+                    <strong>Время:</strong> {{ event.time|time:"H:i" }}
+                </span>
+                {% endif %}
+                <span class="detail-meta-item">
+                    <i class="bi bi-geo-alt detail-meta-icon"></i>
+                    <strong>Место:</strong> {{ event.location }}
+                </span>
+            </div>
+        </div>
         
-        <div class="mb-4">
-            <p>📅 <strong>Дата:</strong> {{ event.date|date:"d.m.Y" }}</p>
-            {% if event.time %}
-            <p>⏰ <strong>Время:</strong> {{ event.time|time:"H:i" }}</p>
+        <div class="detail-body">
+            {% if event.image_url %}
+            <img src="{{ event.image_url }}" alt="{{ event.title }}" class="detail-image" onerror="this.style.display='none'">
             {% endif %}
-            <p>📍 <strong>Место:</strong> {{ event.location }}</p>
+            
+            <h4 class="detail-description-title">Описание мероприятия</h4>
+            <div class="detail-description">{{ event.description }}</div>
         </div>
         
-        <hr>
-        
-        <h4>Описание мероприятия</h4>
-        <p style="white-space: pre-line;">{{ event.description }}</p>
-        
-        {% if event.image_url %}
-        <div class="mt-4">
-            <img src="{{ event.image_url }}" class="img-fluid" alt="{{ event.title }}">
-        </div>
-        {% endif %}
-        
-        <div class="mt-4 text-muted">
+        <div class="detail-footer">
             <small>Добавлено: {{ event.created_at|date:"d.m.Y H:i" }}</small>
         </div>
     </div>

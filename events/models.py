@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from datetime import datetime
 import os
 
 class Event(models.Model):
@@ -70,3 +72,27 @@ class Event(models.Model):
         if len(self.description) > 100:
             return self.description[:100] + '...'
         return self.description
+    
+    def is_past(self):
+        """Проверка, прошло ли событие"""
+        now = timezone.now()
+        now_date = now.date()
+        now_time = now.time()
+        
+        # Если дата в прошлом - событие прошло
+        if self.date < now_date:
+            return True
+        
+        # Если дата сегодня и время указано - проверяем время
+        if self.date == now_date and self.time is not None:
+            if self.time <= now_time:
+                return True
+        
+        return False
+    
+    def save(self, *args, **kwargs):
+        """Переопределяем save для автоматической деактивации прошедших событий"""
+        # Если событие прошло - автоматически деактивируем
+        if self.is_past():
+            self.is_active = False
+        super().save(*args, **kwargs)
