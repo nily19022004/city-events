@@ -29,7 +29,10 @@ def event_list(request):
             events_to_deactivate.append(event_data['id'])
         # Если дата сегодня и время указано и уже прошло
         elif event_date == now_date and event_time is not None:
-            if event_time <= now_time:
+            event_datetime = timezone.make_aware(
+                datetime.combine(event_date, event_time)
+            )
+            if event_datetime <= now:
                 events_to_deactivate.append(event_data['id'])
     
     # Массово деактивируем прошедшие события

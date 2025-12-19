@@ -74,25 +74,18 @@ class Event(models.Model):
         return self.description
     
     def is_past(self):
-        """Проверка, прошло ли событие"""
         now = timezone.now()
-        now_date = now.date()
-        now_time = now.time()
-        
-        # Если дата в прошлом - событие прошло
-        if self.date < now_date:
+
+        if self.date < now.date():
             return True
-        
-        # Если дата сегодня и время указано - проверяем время
-        if self.date == now_date and self.time is not None:
-            if self.time <= now_time:
-                return True
-        
+
+        if self.date == now.date() and self.time and self.time <= now.time():
+            return True
+
         return False
     
     def save(self, *args, **kwargs):
-        """Переопределяем save для автоматической деактивации прошедших событий"""
-        # Если событие прошло - автоматически деактивируем
         if self.is_past():
             self.is_active = False
+        self.full_clean()
         super().save(*args, **kwargs)

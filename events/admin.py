@@ -6,7 +6,6 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'date', 'location', 'is_active')
     list_filter = ('is_active', 'date')
     search_fields = ('title', 'location')
-    list_editable = ('is_active',)
     
     fieldsets = (
         ('Основная информация', {
