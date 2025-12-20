@@ -32,26 +32,29 @@
 ### Шаг 1: Клонирование репозитория
 
 ```bash
-git clone <url-репозитория>
-cd курсач
+git clone https://github.com/nily19022004/city-events.git
+cd city-events
 ```
 
 ### Шаг 2: Создание виртуального окружения
 
 **Для Windows (PowerShell):**
 ```powershell
+
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
 **Для Windows (Command Prompt):**
 ```cmd
+
 python -m venv venv
 venv\Scripts\activate.bat
 ```
 
 **Для Linux/macOS:**
 ```bash
+
 python3 -m venv venv
 source venv/bin/activate
 ```
